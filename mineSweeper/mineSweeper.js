@@ -1,3 +1,5 @@
+document.addEventListener('contextmenu', event => event.preventDefault());
+
 function make2DArray(cols, rows) {
   var arr = new Array(cols);
   for (var i = 0; i < arr.length; i++)
@@ -6,22 +8,24 @@ function make2DArray(cols, rows) {
   return arr;
 }
 
-var grid;
-var cols;
-var rows;
-var w = 20;
+var sz  = 400;
+var w = 40;
 var totalMines = 15;
+var grid, cols, rows;
 
 function setup() {
-  createCanvas(200, 200);
+  background(255);
+  createCanvas(sz, sz);
   cols = floor(width / w);
   rows = floor(height / w);
   grid = make2DArray(cols, rows);
 
   //Create every cell
-  for (let i = 0; i < cols; i++)
-    for (let j = 0; j < rows; j++)
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
       grid[i][j] = new Cell(i, j, w);
+    }
+  }
 
   //Choose mine spots
   for (let n = 0; n < totalMines; n++){
@@ -32,42 +36,61 @@ function setup() {
     grid[i][j].mine = true;
   }
 
-
-  //Count the nearby mines for every cell
+  //   //Count the nearby mines for every cell
   for (let i = 0; i < cols; i++)
     for (let j = 0; j < rows; j++)
       grid[i][j].countMines();
-
-}
-
-function gameOver(pin, pon) {
-  for (let i = 0; i < cols; i++)
-    for (let j = 0; j < rows; j++)
-      grid[i][j].revealed = true;
-
-  //fill('red');
-  //rect(pin, pon, w, w);
-}
-
-function mousePressed() {
-  var cellX = floor(mouseX / w);
-  var cellY = floor(mouseY / w);
-  grid[cellX][cellY].reveal();
-
-  if (grid[cellX][cellY].mine) {
-
-    //grid[cellX][cellY].gameOver();
-    gameOver(cellX, cellY);
-    fill('red');
-  rect(cellX, cellY, w, w);
-  }
 }
 
 function draw() {
-  background(255);
 
   //Draw each cell
   for (let i = 0; i < cols; i++)
       for (let j = 0; j < rows; j++)
         grid[i][j].show();
+
+
+}
+
+function mousePressed() {
+  if (mouseX >= width || mouseY >= height)
+    return;
+
+  let cellX = floor(mouseX / w);
+  let cellY = floor(mouseY / w);
+  let clickedCell = grid[cellX][cellY];
+
+  if (mouseButton === LEFT) {
+    if (!clickedCell.revealed && !clickedCell.flagged) {
+      clickedCell.reveal();
+      if (clickedCell.mine) {
+        clickedCell.lost = true;
+        gameOver();
+      }
+    }
+  }
+  else if (mouseButton === RIGHT) {
+    if (!clickedCell.revealed) {
+      clickedCell.flag();
+    }
+  }
+}
+
+function gameOver() {
+  for (let i = 0; i < cols; i++)
+    for (let j = 0; j < rows; j++)
+      grid[i][j].revealed = true;
+}
+
+function doubleClicked() {
+  if (mouseX >= width || mouseY >= height)
+    return;
+
+  let cellX = floor(mouseX / w);
+  let cellY = floor(mouseY / w);
+  let clickedCell = grid[cellX][cellY];
+
+  if (clickedCell.revealed) {
+    clickedCell.revealAround();
+  }
 }

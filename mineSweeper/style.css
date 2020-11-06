@@ -2,6 +2,20 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+#test {
+    margin: 0;
+    display: flex;
+
+    /* This centers our sketch horizontally. */
+    justify-content: center;
+
+    /* This centers our sketch vertically. */
+    align-items: center;
+  }
+
 canvas {
   display: block;
+  margin-top: 10px;
+  margin-left: 10px;
 }
