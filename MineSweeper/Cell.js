@@ -1,6 +1,5 @@
 class Cell {
 
-
   constructor(i, j, w) {
     this.i = i;
     this.j = j;
@@ -107,6 +106,11 @@ class Cell {
   reveal() {
     this.revealed = true;
 
+    if (this.mine) {
+      this.lost = true;
+      gameOver();
+    }
+
     if (this.neighborCount == 0) {
       this.floodFill();
     }
@@ -140,21 +144,35 @@ class Cell {
         let i = this.i + xoff;
         let j = this.j + yoff;
         //Check that the cell exists (is not on an edge)
-        if (i > -1 && i < cols && j > -1 && j < rows) {
+        if ((i > -1 && i < cols && j > -1 && j < rows)) {
           let neighbor = grid[i][j];
-          if (neighbor.flagged)
-            flaggedNeigh++;
-          if (flaggedNeigh === this.neighborCount && !neighbor.flagged) {
+          //Exclude self
+          if (neighbor !== this) {
             console.log(neighbor);
-            console.log(flaggedNeigh);
-            neighbor.reveal();
+            if (neighbor.flagged)
+              flaggedNeigh++;
+          }
+        }
+      }
+    }
 
+    if (flaggedNeigh === this.neighborCount) {
+      for (let xoff = -1; xoff <= 1; xoff++) {
+        for (let yoff = -1; yoff <= 1; yoff++) {
+          let i = this.i + xoff;
+          let j = this.j + yoff;
+          //Check that the cell exists (is not on an edge)
+          if ((i > -1 && i < cols && j > -1 && j < rows)) {
+            let neighbor = grid[i][j];
+            if (!neighbor.flagged)
+              neighbor.reveal();
           }
         }
       }
     }
   }
 }
+
 
 // Cell.prototype.contains = function(x, y) {
 //   return (x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.w);

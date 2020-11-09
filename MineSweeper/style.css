@@ -3,19 +3,21 @@ html, body {
   padding: 0;
 }
 
-#test {
-    margin: 0;
-    display: flex;
-
-    /* This centers our sketch horizontally. */
-    justify-content: center;
-
-    /* This centers our sketch vertically. */
-    align-items: center;
-  }
-
 canvas {
   display: block;
   margin-top: 10px;
+}
+
+.flex-container {
+  display: flex;
   margin-left: 10px;
+}
+
+#new-game {
+  margin-left: 30px;
+  margin-top: 50px;
+}
+
+.instructions {
+  font-style: italic;
 }
