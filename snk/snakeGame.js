@@ -1,3 +1,6 @@
+let elt;
+let resetButton;
+
 let snake;
 let rez = 20;
 let food;
@@ -8,7 +11,20 @@ function setup() {
   createCanvas(400, 400);
   w = floor(width / rez);
   h = floor(height / rez);
-  frameRate(5);
+  resetGame();
+
+  elt = document.getElementById('description');
+  resetButton = createButton("New Game");
+
+  resetButton.parent(elt);
+  resetButton.id('resetButton');
+
+  resetButton.mousePressed(resetGame);
+}
+
+function resetGame() {
+
+  frameRate(10);
   snake = new Snake();
   foodLocation();
 }
@@ -38,20 +54,21 @@ function keyPressed() {
 function draw() {
   scale(rez);
   background(220);
+
   if (snake.eat(food)) {
     foodLocation();
   }
+
+  noStroke();
+  fill(255, 0, 0);
+  circle(food.x + .5, food.y + .5, 1);
+
   snake.update();
   snake.show();
-
 
   if (snake.endGame()) {
     print("END GAME");
     background(255, 0, 0);
     noLoop();
   }
-
-  noStroke();
-  fill(255, 0, 0);
-  rect(food.x, food.y, 1, 1);
 }
