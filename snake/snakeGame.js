@@ -23,7 +23,7 @@ function setup() {
 }
 
 function resetGame() {
-
+  loop();
   frameRate(10);
   snake = new Snake();
   foodLocation();

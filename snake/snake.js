@@ -81,7 +81,7 @@ class Snake {
     }
 
     for (let i = 0; i < this.body.length; i++) {
-      fill(0);
+      fill(54, 222, 2);
       noStroke();
 
       rect(this.body[i].x, this.body[i].y, 1, 1)
